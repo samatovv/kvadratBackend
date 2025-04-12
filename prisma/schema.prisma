@@ -1,0 +1,82 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+}
+
+model Banner {
+  id     Int      @id @default(autoincrement())
+  title  String
+  image  String
+  Metric Metric[]
+}
+
+model Product {
+  id          Int          @id @default(autoincrement())
+  title       String
+  price       Int
+  square      String
+  description String?
+  rooms       Int?
+  bathrooms   Int?
+  yearBuilt   Int?
+  bedrooms    Int?
+  kitchen     Int?
+  type        PropertyType
+  garage      Int?
+  elevator    Boolean      @default(false)
+  garden      Boolean      @default(false)
+  fireplace   Boolean      @default(false)
+  playground  Boolean      @default(false)
+  laundry     Boolean      @default(false)
+  parking     Boolean      @default(false)
+  gym         Boolean      @default(false)
+  pool        Boolean      @default(false)
+  clubhouse   Boolean      @default(false)
+  garages     Boolean      @default(false)
+  createdAt   DateTime     @default(now())
+  images      String[]
+  placeId     Int?     
+  place       Places?      @relation(fields: [placeId], references: [id])
+  Metric      Metric[]
+}
+
+model Places {
+  id       Int       @id(map: "places_pkey") @default(autoincrement())
+  name     String
+  products Product[]
+}
+
+model Metric {
+  id        Int      @id @default(autoincrement())
+  pageViews Int      @default(0)
+  visits    Int      @default(0)
+  userType  UserType
+  createdAt DateTime @default(now())
+  productId Int?
+  bannerId  Int?
+  banner    Banner?  @relation(fields: [bannerId], references: [id])
+  product   Product? @relation(fields: [productId], references: [id])
+}
+
+enum PropertyType {
+  HOUSE
+  APARTMENT
+  COMMERCIAL
+  LAND
+}
+
+enum UserType {
+  NEW
+  RETURNING
+}
