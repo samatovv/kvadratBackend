@@ -5,10 +5,11 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm install
 
-# 🆕 Добавь генерацию Prisma клиента
-RUN npx prisma generate
-
+# 🟢 Копируем ВСЕ файлы проекта, включая prisma/
 COPY . .
+
+# 🛠 Генерируем Prisma Client
+RUN npx prisma generate
 
 EXPOSE 3000
 
