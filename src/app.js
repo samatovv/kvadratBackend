@@ -15,34 +15,40 @@ import cors from 'cors';
 dotenv.config();
 const app = express();
 
+// Настройка CORS до маршрутов
+app.use(cors({
+    origin: ['http://localhost:3000', 'http://localhost:5173'],  // Разрешение для нескольких источников
+    credentials: true,
+}));
+
 app.use(express.json());
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const swaggerOptions = {
-definition: {
+  definition: {
     openapi: '3.0.0',
     info: {
-        title: 'Kvadrat API',
-        version: '1.0.0',
+      title: 'Kvadrat API',
+      version: '1.0.0',
     },
     components: {
-        securitySchemes: {
-            bearerAuth: {
-                type: 'http',
-                scheme: 'bearer',
-                bearerFormat: 'JWT',
-            },
-        }
+      securitySchemes: {
+        bearerAuth: {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT',
+        },
+      },
     },
     security: [
-        {
-            bearerAuth: []
-        }
+      {
+        bearerAuth: []
+      }
     ]
-},
-apis: [path.join(__dirname, './routes/*.js')],
+  },
+  apis: [path.join(__dirname, './routes/*.js')],
 };
 
 const swaggerSpec = swaggerJsdoc(swaggerOptions);
@@ -57,18 +63,12 @@ app.use('/api/places', placeRoutes);
 
 // Глобальный обработчик ошибок
 app.use((err, req, res, next) => {
-    console.error('🧨 Global error handler:', err);
-    res.status(500).json({
-      message: 'Internal Server Error',
-      error: err.message,
-      stack: err.stack,
-    });
+  console.error('🧨 Global error handler:', err);
+  res.status(500).json({
+    message: 'Internal Server Error',
+    error: err.message,
+    stack: err.stack,
+  });
 });
-
-app.use(cors({
-    origin: ['http://localhost:3000', 'http://localhost:5173'],  // Разрешение для нескольких источников
-    credentials: true,
-}));  
-  
 
 export default app;
