@@ -10,6 +10,7 @@ import bannerRoutes from './routes/banner.js';
 import productRoutes from './routes/product.js';
 import metricRoutes from './routes/metric.js';
 import placeRoutes from './routes/place.js';
+import cors from 'cors';
 
 dotenv.config();
 const app = express();
@@ -62,7 +63,12 @@ app.use((err, req, res, next) => {
       error: err.message,
       stack: err.stack,
     });
-  });
+});
+
+app.use(cors({
+    origin: ['http://localhost:3000', 'http://localhost:5173'],  // Разрешение для нескольких источников
+    credentials: true,
+}));  
   
 
 export default app;
